@@ -96,6 +96,30 @@ const mockData = {
       timestamp: "15 mins ago",
       icon: "✂️",
       color: "text-red-500"
+    },
+    {
+      id: 6,
+      agent: "SEO Agent",
+      action: "optimized content for search",
+      timestamp: "18 mins ago",
+      icon: "🔍",
+      color: "text-yellow-500"
+    },
+    {
+      id: 7,
+      agent: "Avatar Agent",
+      action: "created new avatar variations",
+      timestamp: "22 mins ago",
+      icon: "👤",
+      color: "text-indigo-500"
+    },
+    {
+      id: 8,
+      agent: "Analytics Agent",
+      action: "generated performance report",
+      timestamp: "25 mins ago",
+      icon: "📊",
+      color: "text-cyan-500"
     }
   ],
 
@@ -168,6 +192,24 @@ const mockData = {
         action: "optimized content for search",
         icon: "🔍",
         color: "text-yellow-500"
+      },
+      {
+        agent: "Avatar Agent",
+        action: "generated custom avatar",
+        icon: "👤",
+        color: "text-indigo-500"
+      },
+      {
+        agent: "Analytics Agent",
+        action: "processed engagement metrics",
+        icon: "📊",
+        color: "text-cyan-500"
+      },
+      {
+        agent: "UGC Agent",
+        action: "created user-generated content",
+        icon: "🎭",
+        color: "text-pink-500"
       }
     ];
 
