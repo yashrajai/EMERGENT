@@ -3,6 +3,8 @@ import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Dashboard from "./components/Dashboard";
 import CommentAutomation from "./components/CommentAutomation";
+import ImageGeneration from "./components/ImageGeneration";
+import VideoGeneration from "./components/VideoGeneration";
 
 function App() {
   const [activePage, setActivePage] = useState('overview');
@@ -13,11 +15,11 @@ function App() {
         return <Dashboard activePage={activePage} setActivePage={setActivePage} />;
       case 'comment-automation':
         return <CommentAutomation />;
-      case 'analytics':
-        return <Dashboard activePage={activePage} setActivePage={setActivePage} />;
       case 'image-generation':
-        return <Dashboard activePage={activePage} setActivePage={setActivePage} />;
+        return <ImageGeneration />;
       case 'video-generation':
+        return <VideoGeneration />;
+      case 'analytics':
         return <Dashboard activePage={activePage} setActivePage={setActivePage} />;
       case 'auto-video-editor':
         return <Dashboard activePage={activePage} setActivePage={setActivePage} />;
