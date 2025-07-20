@@ -26,10 +26,10 @@ import {
 } from 'lucide-react';
 import mockData from '../data/mockData';
 
-const Dashboard = () => {
+const Dashboard = ({ activePage, setActivePage }) => {
   const [agents, setAgents] = useState(mockData.agents);
   const [activities, setActivities] = useState(mockData.recentActivities);
-  const [activeSection, setActiveSection] = useState('overview');
+  const [searchInput, setSearchInput] = useState('');
 
   // Simulate real-time activity updates
   useEffect(() => {
@@ -86,7 +86,7 @@ const Dashboard = () => {
       statusColor: 'bg-green-500'
     },
     {
-      id: 'ai-image-generation',
+      id: 'image-generation',
       title: 'AI Image Generation',
       description: 'Create stunning visuals and graphics for your social media campaigns',
       icon: ImageIcon,
@@ -106,7 +106,7 @@ const Dashboard = () => {
       statusColor: 'bg-green-500'
     },
     {
-      id: 'ugc-ad-creator',
+      id: 'ugc-ads',
       title: 'UGC Ad Creator',
       description: 'Create authentic user-generated content ads with custom avatars',
       icon: Wand2,
@@ -125,6 +125,49 @@ const Dashboard = () => {
       'Idle': { color: 'bg-gray-400', text: 'Idle', icon: '⚫' }
     };
     return statusMap[status] || statusMap.Idle;
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchInput.trim()) {
+      // Process natural language commands
+      const command = searchInput.toLowerCase();
+      let response = '';
+      let targetPage = null;
+
+      if (command.includes('generate') && (command.includes('reel') || command.includes('video'))) {
+        response = `🎬 Processing: "${searchInput}" - Redirecting to Video Generation...`;
+        targetPage = 'video-generation';
+      } else if (command.includes('create') && (command.includes('image') || command.includes('thumbnail'))) {
+        response = `🖼️ Processing: "${searchInput}" - Redirecting to Image Generation...`;
+        targetPage = 'image-generation';
+      } else if (command.includes('comment') && (command.includes('reply') || command.includes('automate'))) {
+        response = `💬 Processing: "${searchInput}" - Redirecting to Comment Automation...`;
+        targetPage = 'comment-automation';
+      } else if (command.includes('ugc') || command.includes('ad')) {
+        response = `🎭 Processing: "${searchInput}" - Redirecting to UGC Ad Creator...`;
+        targetPage = 'ugc-ads';
+      } else {
+        response = `🤖 Processing: "${searchInput}" - Analyzing request...`;
+      }
+
+      const newActivity = {
+        id: Date.now(),
+        agent: 'Command Agent',
+        action: response,
+        timestamp: 'Just now',
+        icon: '🤖',
+        color: 'text-purple-500'
+      };
+      
+      setActivities(prev => [newActivity, ...prev.slice(0, 9)]);
+      
+      if (targetPage) {
+        setTimeout(() => setActivePage(targetPage), 1500);
+      }
+      
+      setSearchInput('');
+    }
   };
 
   return (
@@ -151,11 +194,11 @@ const Dashboard = () => {
               <div className="space-y-1">
                 {section.items.map((item) => {
                   const Icon = item.icon;
-                  const isActive = activeSection === item.id;
+                  const isActive = activePage === item.id;
                   return (
                     <button
                       key={item.id}
-                      onClick={() => setActiveSection(item.id)}
+                      onClick={() => setActivePage(item.id)}
                       className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-sm transition-colors ${
                         isActive
                           ? 'bg-blue-500/20 text-blue-400 border border-blue-500/30'
@@ -208,14 +251,22 @@ const Dashboard = () => {
 
           {/* Search Bar */}
           <div className="mb-8">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Search tools, templates, or ask AI"
-                className="w-full pl-12 pr-4 py-4 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all"
-              />
-            </div>
+            <form onSubmit={handleSearch} className="flex items-center space-x-4">
+              <div className="flex-1 relative">
+                <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-slate-400" />
+                <input
+                  type="text"
+                  value={searchInput}
+                  onChange={(e) => setSearchInput(e.target.value)}
+                  placeholder="Ask Sociact Agents to... generate 5 captions & schedule them"
+                  className="w-full pl-12 pr-4 py-4 bg-slate-800/50 border border-slate-700 rounded-xl text-white placeholder-slate-400 focus:border-blue-400 focus:ring-2 focus:ring-blue-400/20 transition-all"
+                />
+              </div>
+              <Button type="submit" className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 px-6 py-4">
+                <Sparkles className="h-4 w-4 mr-2" />
+                Execute
+              </Button>
+            </form>
           </div>
 
           {/* Main Feature Cards */}
@@ -224,7 +275,7 @@ const Dashboard = () => {
               const Icon = feature.icon;
               const statusInfo = getAgentStatus(feature.status);
               return (
-                <Card key={feature.id} className="p-6 bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:bg-slate-800/70 transition-all duration-300 group cursor-pointer">
+                <Card key={feature.id} className="p-6 bg-slate-800/50 border-slate-700 backdrop-blur-sm hover:bg-slate-800/70 transition-all duration-300 group cursor-pointer" onClick={() => setActivePage(feature.id)}>
                   <div className="flex items-start justify-between mb-4">
                     <div className={`p-3 rounded-xl ${feature.bgColor} group-hover:scale-110 transition-transform`}>
                       <Icon className="h-6 w-6 text-white" />
